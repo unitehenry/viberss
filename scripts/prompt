@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# 1. Init agent skills
+scripts/agentskills
+
+# 2. Init shadcn vite project
+
+# 3. Prompt opencode
+
+# 4. TODO: Build static
