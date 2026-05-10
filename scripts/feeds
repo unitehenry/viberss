@@ -17,7 +17,7 @@ docker run -d \
 
 sleep 5
 
-mkdir -p public/feeds
+mkdir -p app/public/feeds
 
 while IFS= read -r line; do
   FEED_NAME=$(echo $line | awk -F ',' '{print $1}')
@@ -27,9 +27,11 @@ while IFS= read -r line; do
   if [[ $RSS_PATH == http* ]]; then
     echo $RSS_PATH
     curl $RSS_PATH > "/tmp/$FEED_FILENAME.xml"
-    xq -j "/tmp/$FEED_FILENAME.xml" > "public/feeds/$FEED_FILENAME.json"
+    xq -j "/tmp/$FEED_FILENAME.xml" > "app/public/feeds/$FEED_FILENAME.json"
   else
     echo "http://127.0.0.1:1200$RSS_PATH?format=json"
-    curl "http://127.0.0.1:1200$RSS_PATH?format=json" > "public/feeds/$FEED_FILENAME.json"
+    curl "http://127.0.0.1:1200$RSS_PATH?format=json" > "app/public/feeds/$FEED_FILENAME.json"
   fi
 done < configs/feeds.csv
+
+cp configs/feeds.csv app/public/feeds

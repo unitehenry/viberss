@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-rm -rf public/feeds
 rm -rf app/public/feeds
+rm -rf app/node_modules
 rm -rf .agents
