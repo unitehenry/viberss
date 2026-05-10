@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
 
 interface FeedItem {
   title: string
@@ -37,25 +36,13 @@ interface Feed {
 export function App() {
   const [feeds, setFeeds] = useState<Feed[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
 
-  const filteredFeeds = useMemo(() => {
-    if (!searchQuery) {
-      return feeds.map(feed => ({
-        ...feed,
-        items: feed.items.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
-      }))
-    }
-    return feeds.map(feed => ({
+  const sortedFeeds = useMemo(() =>
+    feeds.map(feed => ({
       ...feed,
-      items: feed.items
-        .filter(item =>
-          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
-    })).filter(feed => feed.items.length > 0)
-  }, [feeds, searchQuery])
+      items: feed.items.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
+    })), [feeds]
+  )
 
 
 
@@ -159,14 +146,8 @@ export function App() {
     <div className="flex min-h-svh p-6">
       <div className="max-w-4xl w-full mx-auto gap-4">
         <h1 className="text-2xl font-bold mb-6">RSS Reader</h1>
-        <Input
-          placeholder="Search RSS items..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-6"
-        />
         <div className="grid gap-6">
-          {filteredFeeds.map(feed => (
+          {sortedFeeds.map(feed => (
             <Card key={feed.name}>
               <CardHeader>
                 <CardTitle>{feed.title}</CardTitle>
