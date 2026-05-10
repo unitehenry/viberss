@@ -28,7 +28,7 @@ while IFS= read -r line; do
     curl $RSS_PATH > "/tmp/$FEED_FILENAME.xml"
     xq -j "/tmp/$FEED_FILENAME.xml" > "public/feeds/$FEED_FILENAME.json"
   else
-    echo "http://127.0.0.1:1200$RSSPATH?format=json"
-    curl "http://127.0.0.1:1200$RSSPATH?format=json" > "public/feeds/$FEED_FILENAME.json"
+    echo "http://127.0.0.1:1200$RSS_PATH?format=json"
+    curl "http://127.0.0.1:1200$RSS_PATH?format=json" > "public/feeds/$FEED_FILENAME.json"
   fi
 done < configs/feeds.csv
