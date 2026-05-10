@@ -3,4 +3,4 @@ scripts/node
 
 npm --prefix app install
 
-npm --prefix app run dev
+npm --prefix app run lint
