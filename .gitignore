@@ -1,3 +1,4 @@
-public/feeds
+public
 .agents
 skills-lock.json
+app

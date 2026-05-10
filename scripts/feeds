@@ -33,7 +33,3 @@ while IFS= read -r line; do
     curl "http://127.0.0.1:1200$RSS_PATH?format=json" > "public/feeds/$FEED_FILENAME.json"
   fi
 done < configs/feeds.csv
-
-cp configs/feeds.csv public/feeds
-
-cp -rf public/* app/public

@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
-# 1. Init agent skills
+# 1. Check node version
+scripts/node
+
+# 2. Init agent skills
 scripts/agentskills
 
-# 2. Init shadcn vite project
+# 3. Init shadcn vite project
+npx shadcn@latest init --preset b0 --template next
 
-# 3. Prompt opencode
+# 4. Prompt opencode
 
-# 4. TODO: Build static
+# 5. TODO: Build static
