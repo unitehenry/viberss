@@ -19,6 +19,16 @@ sleep 5
 
 mkdir -p public/feeds
 
-curl 'http://127.0.0.1:1200/twitter/user/elonmusk?format=json' > public/feeds/elonmusk.json
+while IFS= read -r line; do
+  RSS_PATH=$(echo $line | awk -F ',' '{print $2}')
+  FEED_FILENAME=$(echo $line | awk -F ',' '{print $3}')
 
-npx prettier --write public/feeds
+  if [[ $RSS_PATH == http* ]]; then
+    echo $RSS_PATH
+    curl $RSS_PATH > "/tmp/$FEED_FILENAME.xml"
+    xq -j "/tmp/$FEED_FILENAME.xml" > "public/feeds/$FEED_FILENAME.json"
+  else
+    echo "http://127.0.0.1:1200$RSSPATH?format=json"
+    curl "http://127.0.0.1:1200$RSSPATH?format=json" > "public/feeds/$FEED_FILENAME.json"
+  fi
+done < configs/feeds.csv
