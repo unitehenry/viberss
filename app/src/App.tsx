@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { Badge } from "@/components/ui/badge"
 
 interface FeedItem {
+  feedTitle: string
   title: string
   description: string
   link: string
@@ -34,14 +35,12 @@ interface Feed {
 }
 
 export function App() {
-  const [feeds, setFeeds] = useState<Feed[]>([])
+  const [allItems, setAllItems] = useState<FeedItem[]>([])
   const [loading, setLoading] = useState(true)
 
-  const sortedFeeds = useMemo(() =>
-    feeds.map(feed => ({
-      ...feed,
-      items: feed.items.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
-    })), [feeds]
+  const sortedItems = useMemo(() =>
+    allItems.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()),
+    [allItems]
   )
 
 
@@ -128,7 +127,14 @@ export function App() {
           }
         })
         const loadedFeeds = (await Promise.all(feedPromises)).filter(Boolean) as Feed[]
-        setFeeds(loadedFeeds)
+        const allItems: FeedItem[] = []
+        loadedFeeds.forEach(feed => {
+          feed.items.forEach(item => {
+            allItems.push({ feedTitle: feed.title, ...item })
+          })
+        })
+        allItems.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
+        setAllItems(allItems)
       } catch (error) {
         console.error('Error loading feeds:', error)
       } finally {
@@ -146,29 +152,17 @@ export function App() {
     <div className="flex min-h-svh p-6">
       <div className="max-w-4xl w-full mx-auto gap-4">
         <h1 className="text-2xl font-bold mb-6">RSS Reader</h1>
-        <div className="grid gap-6">
-          {sortedFeeds.map(feed => (
-            <Card key={feed.name}>
-              <CardHeader>
-                <CardTitle>{feed.title}</CardTitle>
-                <CardDescription>{feed.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {feed.items.map((item, index) => (
-                    <div key={index} className="border rounded-lg p-4">
-                      <h3 className="font-semibold mb-1">
-                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                          {item.title}
-                        </a>
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-2 line-clamp-3">{item.description}</p>
-                      <Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+        <div className="space-y-4">
+          {sortedItems.map((item, index) => (
+            <div key={index} className="border rounded-lg p-4">
+              <h3 className="font-semibold mb-1">
+                <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  [{item.feedTitle}] {item.title}
+                </a>
+              </h3>
+              <p className="text-sm text-muted-foreground mb-2 line-clamp-3">{item.description}</p>
+              <Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
+            </div>
           ))}
         </div>
       </div>
