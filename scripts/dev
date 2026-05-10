@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+scripts/node
+
+npm --prefix app run dev
