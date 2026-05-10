@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+scripts/node
+
+npx skills add https://github.com/shadcn/ui --skill shadcn
+npx skills add https://github.com/antfu/skills --skill vite
