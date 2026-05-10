@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+scripts/node
+
+cp configs/skills-lock.json .
+
+npx skills experimental_install

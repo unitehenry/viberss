@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+VERSION=$(node --version)
+
+if [[ $VERSION != v22* ]]; then
+  echo "requires node 22"
+  exit 1
+fi
