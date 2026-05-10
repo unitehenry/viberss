@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react"
-
+import { Button } from "@/components/ui/button"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
 
 interface FeedItem {
@@ -27,11 +28,46 @@ interface RawFeedItemJsonFeed {
   url: string
 }
 
-interface Feed {
-  name: string
-  title: string
-  description: string
-  items: FeedItem[]
+interface FeedItemComponentProps {
+  item: FeedItem
+}
+
+function FeedItemComponent({ item }: FeedItemComponentProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const previewLength = 150
+  const cleanedText = item.description.replace(/<[^>]*>/g, '').trim()
+  const shouldTruncate = cleanedText.length > previewLength
+  const previewText = shouldTruncate ? cleanedText.substring(0, previewLength) + '...' : cleanedText
+  const displayHtml = item.encoded || item.description
+
+  return (
+    <div className="border rounded-lg p-4">
+      <h3 className="font-semibold mb-1">
+        <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+          {item.title}
+        </a>
+      </h3>
+      <h4 className="text-sm text-muted-foreground mb-2 font-medium">From {item.feedTitle}</h4>
+      {!isOpen ? (
+        <div>
+          <p className="text-sm text-muted-foreground mb-2">{previewText}</p>
+          {shouldTruncate && (
+            <Button variant="link" onClick={() => setIsOpen(true)} className="block p-0 h-auto text-muted-foreground cursor-pointer mt-2 mb-2">
+              Read more
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="text-sm text-muted-foreground mb-2" dangerouslySetInnerHTML={{ __html: displayHtml }} />
+      )}
+      {isOpen && (
+        <Button variant="link" onClick={() => setIsOpen(false)} className="block p-0 h-auto text-muted-foreground mt-2 mb-2 cursor-pointer">
+          Read less
+        </Button>
+      )}
+      <Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
+    </div>
+  )
 }
 
 export function App() {
@@ -154,15 +190,7 @@ export function App() {
         <h1 className="text-2xl font-bold mb-6">RSS Reader</h1>
         <div className="space-y-4">
           {sortedItems.map((item, index) => (
-            <div key={index} className="border rounded-lg p-4">
-              <h3 className="font-semibold mb-1">
-                <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                  [{item.feedTitle}] {item.title}
-                </a>
-              </h3>
-              <p className="text-sm text-muted-foreground mb-2 line-clamp-3">{item.description}</p>
-              <Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
-            </div>
+            <FeedItemComponent key={index} item={item} />
           ))}
         </div>
       </div>
