@@ -1,8 +1,3 @@
-- Subscribe to RSS feeds via RSSHub
-    - unitehenry
-    - geohot
-    - hackernews
-    - ...x profiles
-- CI builds RSS files + index.json (list of rss feeds)
 - ShadCN React App (Vibecode)
+- CI builds RSS files + index.json (list of rss feeds)
 - Feature: Stocks
