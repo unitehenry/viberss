@@ -150,16 +150,18 @@ export function App() {
   const { theme, setTheme } = useTheme()
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark")
 
+  const basePath = import.meta.env.VITE_BASE_PATH || ""
+
   useEffect(() => {
     async function loadFeeds() {
       try {
-        const csvResponse = await fetch("/feeds/feeds.csv")
+        const csvResponse = await fetch(`${basePath}/feeds/feeds.csv`)
         const csvText = await csvResponse.text()
         const lines = csvText.trim().split("\n")
         const feedPromises = lines.map(async (line) => {
           try {
             const [displayName, , file] = line.split(",")
-            const jsonResponse = await fetch(`/feeds/${file}.json`)
+            const jsonResponse = await fetch(`${basePath}/feeds/${file}.json`)
             if (!jsonResponse.ok)
               throw new Error(`Fetch failed: ${jsonResponse.status}`)
             const data = await jsonResponse.json()
@@ -254,7 +256,7 @@ export function App() {
       }
     }
     loadFeeds()
-  }, [])
+  }, [basePath])
 
   if (loading) {
     return (
