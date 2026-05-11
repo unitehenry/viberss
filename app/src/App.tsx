@@ -42,11 +42,7 @@ interface FeedItemComponentProps {
 }
 
 function FeedItemComponent({ item }: FeedItemComponentProps) {
-  const previewLength = 150
   const cleanedText = item.description.replace(/<[^>]*>/g, '').trim()
-  const shouldTruncate = cleanedText.length > previewLength
-  const previewText = shouldTruncate ? cleanedText.substring(0, previewLength) + '...' : cleanedText
-  const displayHtml = item.encoded || item.description
 
   const colorClasses = [
     "bg-blue-100 text-blue-800",
@@ -78,16 +74,7 @@ function FeedItemComponent({ item }: FeedItemComponentProps) {
           {item.title}
         </a>
         </h3>
-      <p className="text-sm text-muted-foreground mb-2">{previewText}</p>
-      {shouldTruncate && (
-        <Button variant="link" onClick={() => {
-          const blob = new Blob([`<html><body>${displayHtml}</body></html>`], {type: 'text/html'});
-          const url = URL.createObjectURL(blob);
-          window.open(url, '_blank');
-        }} className="block p-0 h-auto text-muted-foreground cursor-pointer mt-2 mb-2">
-          Read more
-        </Button>
-      )}
+      <p className="text-sm text-muted-foreground mb-2">{cleanedText}</p>
       <Badge className={`mr-2 ${colorClasses[colorIndex]}`}>{item.feedTitle}</Badge><Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
     </div>
   )
