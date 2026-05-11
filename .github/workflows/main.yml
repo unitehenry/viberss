@@ -21,7 +21,7 @@ jobs:
         run: ./scripts/lint
 
       - name: Check formatting
-        run: npx prettier --check "**/*.{ts,tsx}"
+        run: ./scripts/format check
 
       - name: Run typecheck
         run: ./scripts/typecheck

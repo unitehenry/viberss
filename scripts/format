@@ -3,4 +3,8 @@ scripts/version
 
 npm --prefix app install
 
-npm --prefix app run format
+if [[ $1 == "check" ]]; then
+  npm --prefix app run format-check
+else
+  npm --prefix app run format
+fi
