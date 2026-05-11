@@ -123,13 +123,13 @@ export function App() {
                   pubDate: item.pubDate,
                   encoded: item.encoded
                 } as FeedItem
-              } else if (item.title && (item.content_html || item.content_text) && item.url && item.date_published) {
+              } else if (item.title && (item.content_html || item.content_text) && item.url) {
                 // JsonFeed item
                 return {
                   title: item.title,
                   description: item.content_text || item.content_html || '',
                   link: item.url,
-                  pubDate: item.date_published
+                  pubDate: item.date_published || new Date().toISOString()
                 } as FeedItem
               } else if (item.published || item.updated) {
                 // Atom entry
