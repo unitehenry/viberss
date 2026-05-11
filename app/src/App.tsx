@@ -1,7 +1,8 @@
 import { useEffect, useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
+import { useTheme } from "@/components/theme-provider"
+import { Moon, Sun } from "lucide-react"
 
 interface FeedItem {
   feedTitle: string
@@ -79,6 +80,9 @@ export function App() {
   )
 
 
+
+  const { theme, setTheme } = useTheme()
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
 
   useEffect(() => {
     async function loadFeeds() {
@@ -186,7 +190,12 @@ export function App() {
   return (
     <div className="flex min-h-svh p-6">
       <div className="max-w-4xl w-full mx-auto gap-4">
-        <h1 className="text-2xl font-bold mb-6">RSS Reader</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">RSS Reader</h1>
+          <Button variant="outline" size="icon" onClick={toggleTheme}>
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+        </div>
         <div className="space-y-4">
           {sortedItems.map((item, index) => (
             <FeedItemComponent key={index} item={item} />
