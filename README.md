@@ -35,7 +35,7 @@ app/public/{filename}.json
 
 ## RSSHub Backend
 
-The `feeds` script checks if the `path` defined in `feeds.csv` is relative. If so, it generated the feed via [RSSHub](https://docs.rsshub.app). You can see alist of all [RSSHub sources here](https://docs.rsshub.app/routes).
+The `feeds` script checks if the `path` defined in `feeds.csv` is relative. If so, it generates the feed via [RSSHub](https://docs.rsshub.app). You can see alist of all [RSSHub sources here](https://docs.rsshub.app/routes).
 
 ## Twitter Auth Token
 
