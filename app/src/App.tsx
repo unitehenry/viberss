@@ -19,9 +19,9 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const getText = (val?: string | XMLTextElement): string =>
-  typeof val === 'string' ? val : val?.["#text"] || '';
+  typeof val === "string" ? val : val?.["#text"] || ""
 const getHref = (val?: string | XMLTextElement): string =>
-  typeof val === 'string' ? val : val?.["@href"] || '';
+  typeof val === "string" ? val : val?.["@href"] || ""
 
 interface XMLTextElement {
   "#text"?: string
@@ -218,7 +218,8 @@ export function App() {
                   // Atom entry
                   return {
                     title: getText(item.title),
-                    description: getText(item.summary) || getText(item.content) || "",
+                    description:
+                      getText(item.summary) || getText(item.content) || "",
                     link: getHref(item.link),
                     pubDate: item.published || item.updated,
                   } as FeedItem
