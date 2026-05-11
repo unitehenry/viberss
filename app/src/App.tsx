@@ -217,7 +217,7 @@ export function App() {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <h2 className="px-4 py-2 font-semibold">Feeds</h2>
+          <h2 className="py-2 pl-2 font-semibold">Feeds</h2>
         </SidebarHeader>
         <SidebarContent>
           <ScrollArea className="flex-1">
