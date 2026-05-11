@@ -46,8 +46,7 @@ function FeedItemComponent({ item }: FeedItemComponentProps) {
         <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
           {item.title}
         </a>
-      </h3>
-      <h4 className="text-sm text-muted-foreground mb-2 font-medium">From {item.feedTitle}</h4>
+       </h3>
       {!isOpen ? (
         <div>
           <p className="text-sm text-muted-foreground mb-2">{previewText}</p>
@@ -65,7 +64,7 @@ function FeedItemComponent({ item }: FeedItemComponentProps) {
           Read less
         </Button>
       )}
-      <Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
+      <Badge className="mr-2">{item.feedTitle}</Badge><Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
     </div>
   )
 }
