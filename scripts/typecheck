@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scripts/node
+scripts/version
 
 npm --prefix app install
 

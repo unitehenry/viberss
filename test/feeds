@@ -2,7 +2,7 @@
 
 PREVIEW_URL=http://localhost:4173
 
-scripts/node
+scripts/version
 
 curl $PREVIEW_URL &> /dev/null
 
