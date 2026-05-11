@@ -138,7 +138,7 @@ export function App() {
               throw new Error(`Fetch failed: ${jsonResponse.status}`)
             const data = await jsonResponse.json()
 
-            let description: string, rawItems: unknown[]
+            let description: string, rawItems: any[]
             const title = displayName
 
             if (data.rss?.channel) {
