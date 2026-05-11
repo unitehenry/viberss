@@ -48,13 +48,36 @@ function FeedItemComponent({ item }: FeedItemComponentProps) {
   const previewText = shouldTruncate ? cleanedText.substring(0, previewLength) + '...' : cleanedText
   const displayHtml = item.encoded || item.description
 
+  const colorClasses = [
+    "bg-blue-100 text-blue-800",
+    "bg-green-100 text-green-800",
+    "bg-yellow-100 text-yellow-800",
+    "bg-red-100 text-red-800",
+    "bg-purple-100 text-purple-800",
+    "bg-indigo-100 text-indigo-800",
+    "bg-pink-100 text-pink-800",
+    "bg-gray-100 text-gray-800",
+    "bg-orange-100 text-orange-800",
+    "bg-teal-100 text-teal-800",
+  ]
+
+  const hash = (str: string) => {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) {
+      h = str.charCodeAt(i) + ((h << 5) - h);
+    }
+    return Math.abs(h);
+  }
+
+  const colorIndex = hash(item.feedTitle) % colorClasses.length
+
   return (
     <div className="border rounded-lg p-4">
       <h3 className="font-semibold mb-1">
         <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
           {item.title}
         </a>
-       </h3>
+        </h3>
       <p className="text-sm text-muted-foreground mb-2">{previewText}</p>
       {shouldTruncate && (
         <Button variant="link" onClick={() => {
@@ -65,7 +88,7 @@ function FeedItemComponent({ item }: FeedItemComponentProps) {
           Read more
         </Button>
       )}
-      <Badge className="mr-2">{item.feedTitle}</Badge><Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
+      <Badge className={`mr-2 ${colorClasses[colorIndex]}`}>{item.feedTitle}</Badge><Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
     </div>
   )
 }
