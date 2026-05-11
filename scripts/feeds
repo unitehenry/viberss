@@ -27,7 +27,7 @@ while IFS= read -r line; do
   if [[ $RSS_PATH == http* ]]; then
     echo $RSS_PATH
     curl -A "Mozilla/5.0 (compatible; MyRSSReader/1.0)" $RSS_PATH > "/tmp/$FEED_FILENAME.xml"
-    xq -j "/tmp/$FEED_FILENAME.xml" > "app/public/feeds/$FEED_FILENAME.json"
+    xq --json "/tmp/$FEED_FILENAME.xml" > "app/public/feeds/$FEED_FILENAME.json"
   else
     echo "http://127.0.0.1:1200$RSS_PATH?format=json"
     curl "http://127.0.0.1:1200$RSS_PATH?format=json" > "app/public/feeds/$FEED_FILENAME.json"
