@@ -34,7 +34,6 @@ interface FeedItemComponentProps {
 }
 
 function FeedItemComponent({ item }: FeedItemComponentProps) {
-  const [isOpen, setIsOpen] = useState(false)
   const previewLength = 150
   const cleanedText = item.description.replace(/<[^>]*>/g, '').trim()
   const shouldTruncate = cleanedText.length > previewLength
@@ -48,21 +47,14 @@ function FeedItemComponent({ item }: FeedItemComponentProps) {
           {item.title}
         </a>
        </h3>
-      {!isOpen ? (
-        <div>
-          <p className="text-sm text-muted-foreground mb-2">{previewText}</p>
-          {shouldTruncate && (
-            <Button variant="link" onClick={() => setIsOpen(true)} className="block p-0 h-auto text-muted-foreground cursor-pointer mt-2 mb-2">
-              Read more
-            </Button>
-          )}
-        </div>
-      ) : (
-        <div className="text-sm text-muted-foreground mb-2" dangerouslySetInnerHTML={{ __html: displayHtml }} />
-      )}
-      {isOpen && (
-        <Button variant="link" onClick={() => setIsOpen(false)} className="block p-0 h-auto text-muted-foreground mt-2 mb-2 cursor-pointer">
-          Read less
+      <p className="text-sm text-muted-foreground mb-2">{previewText}</p>
+      {shouldTruncate && (
+        <Button variant="link" onClick={() => {
+          const blob = new Blob([`<html><body>${displayHtml}</body></html>`], {type: 'text/html'});
+          const url = URL.createObjectURL(blob);
+          window.open(url, '_blank');
+        }} className="block p-0 h-auto text-muted-foreground cursor-pointer mt-2 mb-2">
+          Read more
         </Button>
       )}
       <Badge className="mr-2">{item.feedTitle}</Badge><Badge variant="secondary">{new Date(item.pubDate).toLocaleDateString()}</Badge>
