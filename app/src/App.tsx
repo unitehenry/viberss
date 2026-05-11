@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
 import { useTheme } from "@/components/theme-provider"
 import { Moon, Sun } from "lucide-react"
 import {
@@ -96,15 +95,19 @@ export function App() {
 
 
 
-  const handleFeedToggle = (feedName: string, checked: boolean) => {
+  const handleFeedToggle = (feedName: string) => {
     setSelectedFeeds(prev => {
-      const newSet = new Set(prev)
-      if (checked) {
-        newSet.add(feedName)
+      const total = feeds.length
+      if (prev.size === total) {
+        // All selected, clicking any feed: select only this one
+        return new Set([feedName])
+      } else if (prev.size === 1 && prev.has(feedName)) {
+        // This feed is the only one selected, clicking it again: select all
+        return new Set(feeds.map(f => f.name))
       } else {
-        newSet.delete(feedName)
+        // Clicked a different feed when one is selected: select this one
+        return new Set([feedName])
       }
-      return newSet
     })
   }
 
@@ -223,15 +226,13 @@ export function App() {
                 <SidebarMenu>
                   {feeds.map((feed) => (
                     <SidebarMenuItem key={feed.name}>
-                      <SidebarMenuButton>
-                        <Checkbox
-                          id={feed.name}
-                          checked={selectedFeeds.has(feed.name)}
-                          onCheckedChange={(checked) => handleFeedToggle(feed.name, checked as boolean)}
-                        />
-                        <label htmlFor={feed.name} className="text-sm font-medium cursor-pointer ml-2">
+                      <SidebarMenuButton
+                        onClick={() => handleFeedToggle(feed.name)}
+                        className={`cursor-pointer transition-colors duration-200 ${selectedFeeds.size === 1 && selectedFeeds.has(feed.name) ? 'bg-blue-100 dark:bg-blue-900' : ''}`}
+                      >
+                        <span className="text-sm font-medium">
                           {feed.title}
-                        </label>
+                        </span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
