@@ -35,15 +35,19 @@ interface Feed {
 }
 
 interface RawFeedItem {
-  title?: string
+  title?: string | { [key: string]: any }
   description?: string
-  link?: string
+  link?: string | { [key: string]: any }
   pubDate?: string
   encoded?: string
   url?: string
   date_published?: string
   content_html?: string
   content_text?: string
+  published?: string
+  updated?: string
+  summary?: string | { [key: string]: any }
+  content?: string | { [key: string]: any }
 }
 
 interface FeedItemComponentProps {
@@ -203,10 +207,10 @@ export function App() {
                 } else if (item.published || item.updated) {
                   // Atom entry
                   return {
-                    title: item.title?.["#text"] || item.title,
+                    title: (item as any).title?.["#text"] || item.title,
                     description:
-                      item.summary?.["#text"] || item.content?.["#text"] || "",
-                    link: item.link?.["@href"] || item.link,
+                      (item as any).summary?.["#text"] || (item as any).content?.["#text"] || "",
+                    link: (item as any).link?.["@href"] || item.link,
                     pubDate: item.published || item.updated,
                   } as FeedItem
                 } else {
