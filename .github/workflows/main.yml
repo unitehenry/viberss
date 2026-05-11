@@ -44,10 +44,12 @@ jobs:
         run: npm --prefix app install
 
       - name: Install xq
-        run: sudo apt-get install xq
+        run: curl -sSL https://bit.ly/install-xq | sudo bash
 
       - name: xq help
-        run: xq --help
+        run: |
+          xq --version
+          xq --help
 
       - name: Generate feeds
         run: ./scripts/feeds
