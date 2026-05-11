@@ -67,7 +67,7 @@ function FeedItemComponent({ item }: FeedItemComponentProps) {
   const colorIndex = hash(item.feedTitle) % colorClasses.length
 
   return (
-    <div className="border rounded-lg p-4">
+    <div className="border rounded-lg p-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <h3 className="font-semibold mb-1">
         <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
           {item.title}
