@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: npm --prefix app install
 
+      - name: Install xq
+        run: apt-get install xq
+
       - name: Run feeds
         run: ./scripts/feeds
         env:
