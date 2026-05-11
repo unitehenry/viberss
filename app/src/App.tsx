@@ -18,6 +18,16 @@ import {
 } from "@/components/ui/sidebar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
+const getText = (val?: string | XMLTextElement): string =>
+  typeof val === 'string' ? val : val?.["#text"] || '';
+const getHref = (val?: string | XMLTextElement): string =>
+  typeof val === 'string' ? val : val?.["@href"] || '';
+
+interface XMLTextElement {
+  "#text"?: string
+  [attr: string]: string | undefined
+}
+
 interface FeedItem {
   feedTitle: string
   title: string
@@ -35,9 +45,9 @@ interface Feed {
 }
 
 interface RawFeedItem {
-  title?: string | { [key: string]: any }
+  title?: string | XMLTextElement
   description?: string
-  link?: string | { [key: string]: any }
+  link?: string | XMLTextElement
   pubDate?: string
   encoded?: string
   url?: string
@@ -46,8 +56,8 @@ interface RawFeedItem {
   content_text?: string
   published?: string
   updated?: string
-  summary?: string | { [key: string]: any }
-  content?: string | { [key: string]: any }
+  summary?: string | XMLTextElement
+  content?: string | XMLTextElement
 }
 
 interface FeedItemComponentProps {
@@ -207,10 +217,9 @@ export function App() {
                 } else if (item.published || item.updated) {
                   // Atom entry
                   return {
-                    title: (item as any).title?.["#text"] || item.title,
-                    description:
-                      (item as any).summary?.["#text"] || (item as any).content?.["#text"] || "",
-                    link: (item as any).link?.["@href"] || item.link,
+                    title: getText(item.title),
+                    description: getText(item.summary) || getText(item.content) || "",
+                    link: getHref(item.link),
                     pubDate: item.published || item.updated,
                   } as FeedItem
                 } else {
