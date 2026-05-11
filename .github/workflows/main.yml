@@ -46,7 +46,10 @@ jobs:
       - name: Install xq
         run: sudo apt-get install xq
 
-      - name: Run feeds
+      - name: xq help
+        run: xq --help
+
+      - name: Generate feeds
         run: ./scripts/feeds
         env:
           TWITTER_AUTH_TOKEN: ${{ secrets.TWITTER_AUTH_TOKEN }}
@@ -54,8 +57,8 @@ jobs:
       - name: Build
         run: ./scripts/build
 
-      - name: Build
+      - name: Preview
         run: ./scripts/preview &
 
-      - name: Test Feeds
+      - name: Test feeds
         run: ./test/feeds
