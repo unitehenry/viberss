@@ -109,28 +109,26 @@ export function App() {
         const lines = csvText.trim().split('\n')
         const feedPromises = lines.map(async line => {
           try {
-            const [, , file] = line.split(',')
+            const [displayName, , file] = line.split(',')
             const jsonResponse = await fetch(`/feeds/${file}.json`)
             if (!jsonResponse.ok) throw new Error(`Fetch failed: ${jsonResponse.status}`)
             const data = await jsonResponse.json()
 
-            let title: string, description: string, rawItems: any[]
+            let description: string, rawItems: any[]
+            const title = displayName
 
             if (data.rss?.channel) {
               // RSS format
               const channel = data.rss.channel
-              title = channel.title
               description = channel.description || ''
               rawItems = Array.isArray(channel.item) ? channel.item : []
             } else if (data.version && Array.isArray(data.items)) {
               // JSON Feed format
-              title = data.title || file
               description = data.description || ''
               rawItems = data.items
             } else if (data.feed?.entry) {
               // Atom format
               const feed = data.feed
-              title = feed.title?.["#text"] || feed.title || file
               description = feed.subtitle?.["#text"] || feed.subtitle || ''
               rawItems = Array.isArray(feed.entry) ? feed.entry : [feed.entry]
             } else {
