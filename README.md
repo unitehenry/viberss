@@ -1,7 +1,7 @@
 
 [todo: banner]
 
-An RSS feed aggregator with a vibecoded reader app.
+RSS feed aggregator with a vibecoded reader app.
 
 # Aggregate Feeds
 
