@@ -1,5 +1,5 @@
 
-[todo: banner]
+![screenshot](https://github.com/user-attachments/assets/fbc4bea6-65aa-496f-bdb0-7f19e7f967d3)
 
 RSS feed aggregator with a vibecoded reader app.
 
