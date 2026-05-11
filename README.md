@@ -51,7 +51,7 @@ If you're not using any X RSS Feed generation, just comment out the `TWITTER_AUT
 # Vibecoding
 
 > [!CAUTION]
-> The reader app was vibecoded for protoyping purposes only!
+> The reader app was vibecoded for prototyping purposes only!
 
 ## Skills
 
