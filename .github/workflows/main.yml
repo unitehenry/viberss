@@ -44,7 +44,7 @@ jobs:
         run: npm --prefix app install
 
       - name: Install xq
-        run: apt-get install xq
+        run: sudo apt-get install xq
 
       - name: Run feeds
         run: ./scripts/feeds
