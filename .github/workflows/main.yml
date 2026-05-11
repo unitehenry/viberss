@@ -43,6 +43,11 @@ jobs:
       - name: Install dependencies
         run: npm --prefix app install
 
+      - name: Run feeds
+        run: ./scripts/feeds
+        env:
+          TWITTER_AUTH_TOKEN: ${{ secrets.TWITTER_AUTH_TOKEN }}
+
       - name: Build
         run: ./scripts/build
 
