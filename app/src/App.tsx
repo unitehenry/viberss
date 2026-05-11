@@ -1,8 +1,23 @@
 import { useEffect, useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import { useTheme } from "@/components/theme-provider"
 import { Moon, Sun } from "lucide-react"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface FeedItem {
   feedTitle: string
@@ -13,20 +28,13 @@ interface FeedItem {
   encoded?: string
 }
 
-interface RawFeedItemRSS {
+
+
+interface Feed {
+  name: string
   title: string
   description: string
-  link: string
-  pubDate: string
-  encoded?: string
-}
-
-interface RawFeedItemJsonFeed {
-  title: string
-  content_html?: string
-  content_text?: string
-  date_published: string
-  url: string
+  items: FeedItem[]
 }
 
 interface FeedItemComponentProps {
@@ -63,15 +71,32 @@ function FeedItemComponent({ item }: FeedItemComponentProps) {
 }
 
 export function App() {
-  const [allItems, setAllItems] = useState<FeedItem[]>([])
+  const [feeds, setFeeds] = useState<Feed[]>([])
+  const [selectedFeeds, setSelectedFeeds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
 
-  const sortedItems = useMemo(() =>
-    allItems.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()),
-    [allItems]
-  )
+  const filteredItems = useMemo(() => {
+    const selectedFeedNames = selectedFeeds
+    const selectedFeedList = feeds.filter(feed => selectedFeedNames.has(feed.name))
+    const items = selectedFeedList.flatMap(feed => 
+      feed.items.map(item => ({ ...item, feedTitle: feed.title }))
+    )
+    return items.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
+  }, [feeds, selectedFeeds])
 
 
+
+  const handleFeedToggle = (feedName: string, checked: boolean) => {
+    setSelectedFeeds(prev => {
+      const newSet = new Set(prev)
+      if (checked) {
+        newSet.add(feedName)
+      } else {
+        newSet.delete(feedName)
+      }
+      return newSet
+    })
+  }
 
   const { theme, setTheme } = useTheme()
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
@@ -158,14 +183,8 @@ export function App() {
           }
         })
         const loadedFeeds = (await Promise.all(feedPromises)).filter(Boolean) as Feed[]
-        const allItems: FeedItem[] = []
-        loadedFeeds.forEach(feed => {
-          feed.items.forEach(item => {
-            allItems.push({ feedTitle: feed.title, ...item })
-          })
-        })
-        allItems.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
-        setAllItems(allItems)
+        setFeeds(loadedFeeds)
+        setSelectedFeeds(new Set(loadedFeeds.map(f => f.name)))
       } catch (error) {
         console.error('Error loading feeds:', error)
       } finally {
@@ -176,25 +195,61 @@ export function App() {
   }, [])
 
   if (loading) {
-    return <div className="flex min-h-svh p-6">Loading RSS feeds...</div>
+    return (
+      <SidebarProvider>
+        <div className="flex min-h-svh p-6">Loading RSS feeds...</div>
+      </SidebarProvider>
+    )
   }
 
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="max-w-4xl w-full mx-auto gap-4">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">RSS Reader</h1>
-          <Button variant="outline" size="icon" onClick={toggleTheme}>
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+          <h2 className="px-4 py-2 font-semibold">Feeds</h2>
+        </SidebarHeader>
+        <SidebarContent>
+          <ScrollArea className="flex-1">
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {feeds.map((feed) => (
+                    <SidebarMenuItem key={feed.name}>
+                      <SidebarMenuButton>
+                        <Checkbox
+                          id={feed.name}
+                          checked={selectedFeeds.has(feed.name)}
+                          onCheckedChange={(checked) => handleFeedToggle(feed.name, checked as boolean)}
+                        />
+                        <label htmlFor={feed.name} className="text-sm font-medium cursor-pointer ml-2">
+                          {feed.title}
+                        </label>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </ScrollArea>
+        </SidebarContent>
+      </Sidebar>
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <h1 className="text-xl font-bold">RSS Reader ({filteredItems.length} items)</h1>
+          <Button variant="outline" size="icon" onClick={toggleTheme} className="ml-auto">
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4">
+          <div className="space-y-4">
+            {filteredItems.map((item, index) => (
+              <FeedItemComponent key={`${item.feedTitle}-${index}`} item={item} />
+            ))}
+          </div>
         </div>
-        <div className="space-y-4">
-          {sortedItems.map((item, index) => (
-            <FeedItemComponent key={index} item={item} />
-          ))}
-        </div>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
 
