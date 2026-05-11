@@ -34,6 +34,18 @@ interface Feed {
   items: FeedItem[]
 }
 
+interface RawFeedItem {
+  title?: string
+  description?: string
+  link?: string
+  pubDate?: string
+  encoded?: string
+  url?: string
+  date_published?: string
+  content_html?: string
+  content_text?: string
+}
+
 interface FeedItemComponentProps {
   item: FeedItem
 }
@@ -138,7 +150,7 @@ export function App() {
               throw new Error(`Fetch failed: ${jsonResponse.status}`)
             const data = await jsonResponse.json()
 
-            let description: string, rawItems: any[]
+            let description: string, rawItems: RawFeedItem[]
             const title = displayName
 
             if (data.rss?.channel) {
