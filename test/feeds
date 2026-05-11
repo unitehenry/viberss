@@ -17,3 +17,18 @@ if ! [[ $(cat configs/feeds.csv | wc -l) -eq $(npx agent-browser get count "[dat
   echo "not all feeds being rendered"
   exit 1
 fi
+
+INDEX=0
+
+while IFS= read -r line; do
+  FEED_NAME=$(echo $line | awk -F ',' '{print $1}')
+
+  SIDEBAR_NAME=$(npx agent-browser find nth $INDEX "[data-sidebar=menu] li" text)
+
+  if ! [[ "$FEED_NAME" == "$SIDEBAR_NAME" ]]; then
+    echo "sidebar name ($SIDEBAR_NAME) is not expected feed name ($FEED_NAME)"
+    exit 1
+  fi
+
+  ((INDEX++))
+done < configs/feeds.csv
