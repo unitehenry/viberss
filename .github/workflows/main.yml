@@ -1,0 +1,27 @@
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm --prefix app install
+
+      - name: Run lint
+        run: ./scripts/lint
+
+      - name: Check formatting
+        run: npx prettier --check "**/*.{ts,tsx}"
+
+      - name: Run typecheck
+        run: ./scripts/typecheck
