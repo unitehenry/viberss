@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+PREVIEW_URL=http://localhost:4173
+
+scripts/node
+
+curl $PREVIEW_URL &> /dev/null
+
+if ! [[ "$?" -eq 0 ]]; then
+  echo "preview server not started"
+  exit 1
+fi
+
+npx agent-browser open $PREVIEW_URL
+
+if ! [[ $(cat configs/feeds.csv | wc -l) -eq $(npx agent-browser get count "[data-sidebar=menu] li") ]]; then
+  echo "not all feeds being rendered"
+  exit 1
+fi
